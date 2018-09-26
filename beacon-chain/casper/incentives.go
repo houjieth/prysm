@@ -28,7 +28,7 @@ func CalculateRewards(
 	depositFactor := (totalParticipatedDeposit - totalDeposit) / totalDeposit
 
 	log.Debugf("Applying rewards and penalties for the validators for slot %d", slot)
-	if timeSinceFinality <= 2*params.CycleLength {
+	if timeSinceFinality <= 3*params.CycleLength {
 		for _, validatorIndex := range activeValidators {
 			var voted bool
 
@@ -90,7 +90,7 @@ func SlotMaxInterestRate(dynasty uint64, validators []*pb.ValidatorRecord) float
 // validators.
 func quadraticPenaltyQuotient() uint64 {
 	dropTimeFactor := float64(params.SqrtDropTime / params.SlotDuration)
-	return uint64(math.Pow(dropTimeFactor, 0.5))
+	return uint64(math.Pow(dropTimeFactor, 2.0))
 }
 
 // QuadraticPenalty returns the penalty that will be applied to an offline validator
