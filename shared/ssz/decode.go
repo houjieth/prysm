@@ -54,6 +54,8 @@ func makeDecoder(typ reflect.Type) (dec decoder, err error) {
 		return decodeUint32, nil
 	case kind == reflect.Uint64:
 		return decodeUint64, nil
+	case kind == reflect.Int32:
+		return decodeInt32, nil
 	case kind == reflect.Slice && typ.Elem().Kind() == reflect.Uint8:
 		return decodeBytes, nil
 	case kind == reflect.Slice:
@@ -112,6 +114,10 @@ func decodeUint32(r io.Reader, val reflect.Value) (uint32, error) {
 	}
 	val.SetUint(uint64(binary.LittleEndian.Uint32(b)))
 	return 4, nil
+}
+
+func decodeInt32(r io.Reader, val reflect.Value) (uint32, error) {
+	return decodeUint32()
 }
 
 func decodeUint64(r io.Reader, val reflect.Value) (uint32, error) {

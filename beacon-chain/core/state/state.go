@@ -6,6 +6,7 @@ package state
 import (
 	"encoding/binary"
 	"fmt"
+	"github.com/prysmaticlabs/prysm/shared/ssz"
 
 	"github.com/gogo/protobuf/proto"
 	b "github.com/prysmaticlabs/prysm/beacon-chain/core/blocks"
@@ -178,4 +179,8 @@ func Hash(state *pb.BeaconState) ([32]byte, error) {
 		return [32]byte{}, fmt.Errorf("could not marshal beacon state: %v", err)
 	}
 	return hashutil.Hash(data), nil
+}
+
+func TreeHashSSZ(state *pb.BeaconState) ([32]byte, error) {
+	return ssz.TreeHash(state)
 }

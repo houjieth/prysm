@@ -86,6 +86,8 @@ func makeEncoder(typ reflect.Type) (encoder, encodeSizer, error) {
 		return encodeUint32, func(reflect.Value) (uint32, error) { return 4, nil }, nil
 	case kind == reflect.Uint64:
 		return encodeUint64, func(reflect.Value) (uint32, error) { return 8, nil }, nil
+	case kind == reflect.Int32:
+		return encodeInt32, func(reflect.Value) (uint32, error) { return 4, nil }, nil
 	case kind == reflect.Slice && typ.Elem().Kind() == reflect.Uint8:
 		return makeBytesEncoder()
 	case kind == reflect.Slice:
@@ -132,6 +134,13 @@ func encodeUint32(val reflect.Value, w *encbuf) error {
 	binary.LittleEndian.PutUint32(b, uint32(v))
 	w.str = append(w.str, b...)
 	return nil
+}
+
+// encodeInt32 will assume the input value is always non-negative and will cast it to uint32.
+// There is not support for signed value in ssz spec.
+func encodeInt32(val reflect.Value, w *encbuf) error {
+	uint32Val := val.Interface().(uint32)
+	return encodeUint32(reflect.ValueOf(uint32Val), w)
 }
 
 func encodeUint64(val reflect.Value, w *encbuf) error {

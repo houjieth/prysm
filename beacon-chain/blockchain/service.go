@@ -108,7 +108,8 @@ func (c *ChainService) initializeBeaconChain(genesisTime time.Time) error {
 		return fmt.Errorf("could not attempt fetch beacon state: %v", err)
 	}
 	// TODO(#1389): Replace by state tree hashing algorithm to determine root instead of a hash.
-	hash, err := state.Hash(beaconState)
+	//hash, err := state.Hash(beaconState)
+	hash, err := state.TreeHashSSZ(beaconState)
 	if err != nil {
 		return fmt.Errorf("could not hash beacon state: %v", err)
 	}
